@@ -28,7 +28,7 @@ fi
 mkdir /opt/graphbuild; cp carbon.conf /opt/graphbuild; cp local_settings.py /opt/graphbuild; cd /opt/graphbuild
 
 # Install prebuilt yum packages from repo 
-yum -y install supervisor python-carbon-0.9.13-1.noarch python-graphite-web-0.9.13-1.noarch python-whisper-0.9.13-1.noarch
+yum -y install supervisor python-carbon-0.9.13-1.noarch python-graphite-web-0.9.13-1.noarch python-whisper-0.9.13-1.noarch --nogpgcheck
 
 # Prep dedicated user
 groupadd graphite
