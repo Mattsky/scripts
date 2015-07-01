@@ -104,5 +104,7 @@ fi
 # Cleanup
 # cd /root
 # rm -rf /opt/graphbuild
+chown graphite:graphite /opt/graphite/storage/graphite.db
+service supervisord start
 
 echo "Install complete. Graphite now available on port 8080."
