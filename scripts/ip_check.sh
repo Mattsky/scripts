@@ -4,9 +4,6 @@
 # into a .csv file for reference.
 # Note: depends on keybased SSH.
 
-# Command to list systems in target dir is:
-# find ./* -type f -exec cat {} \; | grep -v "^\[" | awk '{print $1}' | grep -v "^impact" | grep -v "^$" | grep -v "^#" | grep -v "^node" | grep -v "^security" | grep -v "^configuration" | grep -v "^puppet" | grep -v "This"
-
 # enable cancellation of individual systems if they don't connect properly
 
 trap ctrl_c INT
