@@ -1,0 +1,36 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+  config.vm.define "puppetclient" do |puppetclient|
+
+    config.vm.box = "chef/centos-6.5"
+    config.vm.hostname = "puppet-client.localdomain"
+    config.vm.network "forwarded_port", guest: 22, host: 2200, id: 'ssh'
+    config.vm.provider "virtualbox" do |vb| 
+  	config.vm.network "private_network", :ip => '172.28.128.50', :name => 'vboxnet0', :adapter => 2
+    end
+    config.vm.provider "virtualbox" do |vb|
+      vb.gui = true
+      vb.memory = "512"
+    end
+
+    config.vm.provision "shell", path: "bootstrap_client.sh"
+  end
+
+  config.vm.define "puppetserver" do |puppetserver|
+    config.vm.box = "chef/centos-6.5"
+    config.vm.hostname = "puppet-server.localdomain"
+    config.vm.network "forwarded_port", guest: 22, host: 2201, id: 'ssh'
+    config.vm.provider "virtualbox" do |vb| 
+        config.vm.network "private_network", :ip => '172.28.128.100', :name => 'vboxnet0', :adapter => 2
+    end
+    config.vm.provider "virtualbox" do |vb|
+      vb.gui = true
+      vb.memory = "512"
+    end
+
+    config.vm.provision "shell", path: "bootstrap_server.sh"
+
+    end
+end
