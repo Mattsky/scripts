@@ -1,3 +1,7 @@
 # Vagrant 1.7.2
 
-Quick and dirty scripts to get two CentOS systems online and puppetised.
+Different scripts to do different things.
+
+sys1/2 - standalone Puppet server and client nodes.
+combined - both nodes, defined in one Vagrantfile.
+ELK - building on combined, sets up an ELK server and a logstash forwarder node.
