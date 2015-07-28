@@ -1,0 +1,48 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+  config.ssh.username = "root"
+  config.ssh.password = "vagrant"
+  config.vm.define "elkserver" do |elkserver|
+    elkserver.vm.box = "chef/centos-6.5"
+    elkserver.vm.hostname = "puppet-server.localdomain"
+    elkserver.vm.network "forwarded_port", guest: 22, host: 2201, id: 'ssh'
+    elkserver.vm.network "forwarded_port", guest: 8080, host: 8080
+    elkserver.vm.provider "virtualbox" do |vb|
+        config.vm.network "private_network", :ip => '172.28.128.100', :name => 'vboxnet0', :adapter => 2
+    end
+    elkserver.vm.provider "virtualbox" do |vb|
+      vb.gui = true
+      vb.memory = "512"
+    end
+
+    elkserver.vm.provision "shell", inline: "mkdir -p /etc/logstash/conf.d"
+    elkserver.vm.provision "file", source: "./logstash/01-lumberjack-input.conf", destination: "/etc/logstash/conf.d/01-lumberjack-input.conf"
+    elkserver.vm.provision "file", source: "./logstash/10-syslog.conf", destination: "/etc/logstash/conf.d/10-syslog.conf"
+    elkserver.vm.provision "file", source: "./logstash/30-lumberjack-output.conf", destination: "/etc/logstash/conf.d/30-lumberjack-output.conf"
+    elkserver.vm.provision "file", source: "./repos/elasticsearch.repo", destination: "/etc/yum.repos.d/elasticsearch.repo"
+    elkserver.vm.provision "file", source: "./repos/logstash.repo", destination: "/etc/yum.repos.d/logstash.repo"
+    elkserver.vm.provision "shell", path: "bootstrap_server.sh"
+
+  end
+
+  config.vm.define "elkclient" do |elkclient|
+
+    elkclient.vm.box = "chef/centos-6.5"
+    elkclient.vm.hostname = "puppet-client.localdomain"
+    elkclient.vm.network "forwarded_port", guest: 22, host: 2200, id: 'ssh'
+    elkclient.vm.provider "virtualbox" do |vb| 
+  	config.vm.network "private_network", :ip => '172.28.128.50', :name => 'vboxnet0', :adapter => 2
+    end
+    elkclient.vm.provider "virtualbox" do |vb|
+      vb.gui = true
+      vb.memory = "512"
+    end
+
+    elkclient.vm.provision "file", source: "./vagrantkey", destination: "/root/.ssh/vagrant"
+    elkclient.vm.provision "shell", path: "bootstrap_client.sh"
+    elkclient.vm.provision "file", source: "./forwarder/logstash-forwarder", destination: "/etc/logstash-forwarder"
+  end
+
+end
