@@ -45,14 +45,14 @@ def get_credentials():
 def main():
     varlist = []
     credentials = get_credentials()
-    #DELEGATED_CREDENTIALS = credentials.create_delegated('matt@appnovation.com')
+   
     http_auth = credentials.authorize(httplib2.Http())
     discoveryUrl = ('https://sheets.googleapis.com/$discovery/rest?'
                     'version=v4')
     service = discovery.build('sheets', 'v4', http=http_auth,
                               discoveryServiceUrl=discoveryUrl)
 
-    spreadsheetId = '1xQIjGysYuZKp4wC1MuYFf7O3CqBe-2asYq5KjKjsuyk'
+    spreadsheetId = ''
 
     #Generate list of names
     nameRange = 'Server List!A5:A111'
